@@ -19,7 +19,7 @@ class ContactController extends Controller
     protected $validationRules = [
         'first_name' => 'required',
         'last_name' => 'required',
-        'phone' => 'required',
+        'phones' => 'required',
     ];
 
     /**
@@ -29,8 +29,8 @@ class ContactController extends Controller
      */
     public function index()
     {
-        $customerScores = Contact::all();
-        return ContactResource::collection($customerScores);
+        $contacts = Contact::all();
+        return ContactResource::collection($contacts);
     }
 
     /**
@@ -53,8 +53,15 @@ class ContactController extends Controller
         $contact = new Contact();
         $contact->first_name = $request->first_name;
         $contact->last_name = $request->last_name;
-        $strippedCommaPhone = str_replace(',', '', $request->phone);
-        $contact->phone = implode(',', $strippedCommaPhone);
+        $phones = $request->phones;
+
+        // remove commas from data
+        $cleanPhones = array_map(function ($value) {
+            return str_replace(',', '', $value);
+        }, $phones);
+
+        // concatenate phone numbers into one string
+        $contact->phone = implode(',', $cleanPhones);
 
         if ($contact->save()) {
             return response()->json(
