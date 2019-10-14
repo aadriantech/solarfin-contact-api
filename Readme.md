@@ -1,8 +1,8 @@
-#Install the Api
+# Install the Api
 
-###run composer
+### run composer
 ```sh
-composer install
+composer update
 ```
 
 ### generate key
