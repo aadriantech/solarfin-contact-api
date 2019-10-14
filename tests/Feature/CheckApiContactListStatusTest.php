@@ -27,7 +27,7 @@ class CheckApiContactListStatusTest extends TestCase
     public function testApiContactListJsonStructureIsCorrect()
     {
         $response = $this->get('/api/contacts');
-        
+
         $response->assertJsonStructure([
             'data' => [
                 '*' => ['id', 'first_name', 'last_name', 'phone', 'created_at', 'updated_at']
