@@ -22,9 +22,9 @@ class ContactStrategy
      * Prepares and saves contact resource to database
      *
      * @param Request $request
-     * @return bool
+     * @return Contact
      */
-    public function save(Request $request)
+    public function process(Request $request)
     {
         $this->contact->first_name = $request->first_name;
         $this->contact->last_name = $request->last_name;
@@ -36,6 +36,6 @@ class ContactStrategy
         // concatenate phone numbers into one string
         $this->contact->phone = implode(',', $cleanPhones);
 
-        return $this->contact->save();
+        return $this->contact;
     }
 }

@@ -59,7 +59,8 @@ class ContactController extends Controller
 
         $contact = new Contact();
         $contactStrategy = new ContactStrategy($contact);
-        if ($contactStrategy->save($request)) {
+        $contact = $contactStrategy->process($request);
+        if ($contact->save()) {
             return response()->json(
                 [
                     'message' => 'request successful, data created.',
