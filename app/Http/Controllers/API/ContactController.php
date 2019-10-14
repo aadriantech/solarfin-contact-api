@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\API;
 
+use App\Helpers\ArrayHelper;
 use App\Models\Contact;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ContactResource;
+use App\Strategies\ContactStrategy;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Validator;
@@ -32,12 +34,14 @@ class ContactController extends Controller
     public function index()
     {
         $contacts = Contact::all();
+
         return ContactResource::collection($contacts);
     }
 
     /**
      * Creates a new Contact record
-     * @param Request
+     *
+     * @param Request $request
      * @return JsonResponse
      */
     public function store(Request $request)
@@ -54,19 +58,8 @@ class ContactController extends Controller
         }
 
         $contact = new Contact();
-        $contact->first_name = $request->first_name;
-        $contact->last_name = $request->last_name;
-        $phones = $request->phones;
-
-        // remove commas from data
-        $cleanPhones = array_map(function ($value) {
-            return str_replace(',', '', $value);
-        }, $phones);
-
-        // concatenate phone numbers into one string
-        $contact->phone = implode(',', $cleanPhones);
-
-        if ($contact->save()) {
+        $contactStrategy = new ContactStrategy($contact);
+        if ($contactStrategy->save($request)) {
             return response()->json(
                 [
                     'message' => 'request successful, data created.',
@@ -82,29 +75,6 @@ class ContactController extends Controller
             ],
             500
         );
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param \App\Contact $contact
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Contact $contact)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Contact $contact
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Contact $contact)
-    {
-        //
     }
 
     /**
