@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers\API;
 
@@ -9,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
+use Exception;
 
 class ContactController extends Controller
 {
@@ -34,7 +36,8 @@ class ContactController extends Controller
     }
 
     /**
-     * @param Request $request
+     * Creates a new Contact record
+     * @param Request
      * @return JsonResponse
      */
     public function store(Request $request)
@@ -105,13 +108,29 @@ class ContactController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Deletes a contact record
      *
-     * @param \App\Contact $contact
-     * @return \Illuminate\Http\Response
+     * @param Contact $contact
+     * @return JsonResponse
+     * @throws Exception
      */
     public function destroy(Contact $contact)
     {
-        //
+        if ($contact->delete()) {
+            return response()->json(
+                [
+                    'message' => 'successfully deleted a record.'
+                ],
+                200
+            );
+        }
+
+        return response()->json(
+            [
+                'Error' => 'request failed: data was not deleted.'
+            ],
+            500
+        );
+
     }
 }

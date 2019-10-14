@@ -9,7 +9,7 @@ class ContactResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function toArray($request)
@@ -17,13 +17,11 @@ class ContactResource extends JsonResource
         return [
             'type' => 'Contact',
             'id' => $this->id,
-            'attributes' => [
-                'first_name' => $this->customer_id,
-                'last_name' => $this->random_click,
-                'phone' => json_encode(explode(',', $this->phone)),
-                'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-                'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
-            ],
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'phone' => json_encode(explode(',', $this->phone)),
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
         ];
     }
 }
